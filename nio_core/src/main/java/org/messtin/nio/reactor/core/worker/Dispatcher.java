@@ -7,5 +7,5 @@ import java.nio.channels.SocketChannel;
  */
 public interface Dispatcher extends LifeCycle{
 
-    void dispatch(SocketChannel socketChannel);
+    void dispatch(SocketChannel socketChannel) throws InterruptedException;
 }

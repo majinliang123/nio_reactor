@@ -34,7 +34,7 @@ public final class ServerBuilder {
         Dispatcher dispatcher = new DefaultDispatcher(workerCount, eventHandlerFactory);
         try {
             Acceptor acceptor = new Acceptor(dispatcher, address);
-            ServerPromise promise = new ServerPromise(acceptor, AcceptorThreadFactory.newInstance()).bind();
+            ServerPromise promise = new ServerPromise(acceptor, AcceptorThreadFactory.newInstance());
             return promise;
         } catch (IOException e) {
             e.printStackTrace();

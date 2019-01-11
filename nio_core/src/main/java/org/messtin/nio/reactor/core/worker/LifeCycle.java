@@ -2,6 +2,7 @@ package org.messtin.nio.reactor.core.worker;
 
 import org.messtin.nio.reactor.core.Status;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -10,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  */
 public interface LifeCycle {
 
-    void initialize();
+    void initialize() throws IOException;
 
     void close();
 

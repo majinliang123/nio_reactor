@@ -6,6 +6,9 @@ import org.messtin.nio.reactor.core.worker.impl.Acceptor;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The status of server. We use the {@link Acceptor#status} to stand for the status of this class.
+ */
 public class ServerPromise implements LifeCycle {
 
     private Thread acceptorThread;
@@ -16,7 +19,7 @@ public class ServerPromise implements LifeCycle {
         acceptorThread = factory.create(acceptor);
     }
 
-    public ServerPromise bind() {
+    public ServerPromise start() {
         initialize();
         return this;
     }

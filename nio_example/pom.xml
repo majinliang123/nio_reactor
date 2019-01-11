@@ -11,5 +11,11 @@
 
     <artifactId>nio_example</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <artifactId>nio_core</artifactId>
+            <groupId>org.messtin</groupId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>

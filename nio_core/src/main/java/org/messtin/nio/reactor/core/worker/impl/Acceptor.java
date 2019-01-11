@@ -45,20 +45,27 @@ public class Acceptor implements LifeCycle, Runnable {
 
     @Override
     public void run() {
+        logger.info("Start initialize Acceptor.");
+        status = Status.ACTIVE;
         initialize();
+        logger.info("Complete initialize Acceptor.");
     }
 
-    private void processEvents(int count) throws IOException {
-        Set<SelectionKey> keys = selector.selectedKeys();
-        for (SelectionKey key : keys) {
-            processEvent(key);
+    private void processEvents(int count) throws IOException, InterruptedException {
+        if (count > 0){
+            Set<SelectionKey> keys = selector.selectedKeys();
+            for (SelectionKey key : keys) {
+                processEvent(key);
+            }
+            keys.clear();
         }
-        keys.clear();
     }
 
-    private void processEvent(SelectionKey key) throws IOException {
+    private void processEvent(SelectionKey key) throws IOException, InterruptedException {
         if (key.isValid()) {
             SocketChannel socketChannel = ((ServerSocketChannel) key.channel()).accept();
+            socketChannel.socket().setTcpNoDelay(true);
+            socketChannel.socket().setKeepAlive(false);
             dispatcher.dispatch(socketChannel);
         }
     }
@@ -66,11 +73,11 @@ public class Acceptor implements LifeCycle, Runnable {
     @Override
     public void initialize() {
         try {
+            logger.info("Start initialize server socket channel.");
             serverSocketChannel.socket().bind(address);
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-            dispatcher.initialize();
 
-            status = Status.ACTIVE;
+            dispatcher.initialize();
 
             while (status == Status.ACTIVE) {
                 int count = selector.select();
