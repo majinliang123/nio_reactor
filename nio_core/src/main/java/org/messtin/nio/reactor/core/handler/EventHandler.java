@@ -1,6 +1,8 @@
 package org.messtin.nio.reactor.core.handler;
 
-import org.messtin.nio.reactor.core.SessionContext;
+import org.messtin.nio.reactor.core.session.SessionContext;
+
+import java.io.IOException;
 
 public interface EventHandler {
 

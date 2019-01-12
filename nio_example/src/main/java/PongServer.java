@@ -1,7 +1,7 @@
 import org.messtin.nio.reactor.core.ServerBuilder;
 import org.messtin.nio.reactor.core.ServerPromise;
-import org.messtin.nio.reactor.core.SessionContext;
 import org.messtin.nio.reactor.core.handler.EventHandler;
+import org.messtin.nio.reactor.core.session.SessionContext;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -10,12 +10,15 @@ import java.nio.charset.StandardCharsets;
 
 public class PongServer {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         ServerPromise server = ServerBuilder.build(PongEventListener::new).bind(8080);
         server.start();
+        System.out.println("Will close the server if you enter any word.");
+        System.in.read();
+        server.close();
     }
 
-    public static class PongEventListener implements EventHandler{
+    public static class PongEventListener implements EventHandler {
 
         private final ByteBuffer buffer = ByteBuffer.wrap("Pong...".getBytes(StandardCharsets.UTF_8));
 
@@ -44,7 +47,7 @@ public class PongServer {
 
         @Override
         public void disconnect(final SessionContext session) {
-
+            System.out.println("Closed: " + session.remoteAddress());
         }
     }
 }

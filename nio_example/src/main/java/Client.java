@@ -1,5 +1,4 @@
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.util.Date;
@@ -8,15 +7,15 @@ import java.util.concurrent.Executors;
 
 public class Client {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         ExecutorService pool = Executors.newFixedThreadPool(18);
 
         long now = System.currentTimeMillis();
-        for (int i =0; i < 10000; i++){
-            pool.submit(()->{
+        for (int i = 0; i < 100000; i++) {
+            pool.submit(() -> {
                 try {
                     System.out.println(new Date());
-                    Socket socket =new Socket("localhost",8080);
+                    Socket socket = new Socket("localhost", 8080);
                     InputStream in = socket.getInputStream();
                     ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
                     ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
@@ -28,8 +27,7 @@ public class Client {
                     byte[] bytes = byteArrayOut.toByteArray();
                     String str = bytes != null ? new String(bytes) : null;
                     System.out.println(str);
-                    System.out.println(new Date());
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
 
@@ -37,9 +35,9 @@ public class Client {
 
         }
         pool.shutdown();
-        Thread t = new Thread(){
+        Thread t = new Thread() {
             @Override
-            public void run(){
+            public void run() {
                 System.out.println(System.currentTimeMillis() - now);
             }
         };

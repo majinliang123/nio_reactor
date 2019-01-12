@@ -2,7 +2,6 @@ package org.messtin.nio.reactor.core.worker.impl;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.messtin.nio.reactor.core.Status;
 import org.messtin.nio.reactor.core.factory.EventHandlerFactory;
 import org.messtin.nio.reactor.core.factory.impl.ProcessorThreadFactory;
 import org.messtin.nio.reactor.core.worker.Dispatcher;
@@ -12,7 +11,6 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DefaultDispatcher implements Dispatcher {
@@ -53,21 +51,23 @@ public class DefaultDispatcher implements Dispatcher {
             processorThreads.add(processorThread);
         }
         logger.info("Default Dispatcher started {} processor", processors.size());
+
+        status = Status.ACTIVE;
     }
 
     @Override
     public void close() {
-
+        status = Status.SHUTTING_DOWN;
+        processors.forEach(Processor::close);
+        processorThreads.forEach(Thread::interrupt);
     }
 
     @Override
-    public void await() {
-
-    }
-
-    @Override
-    public void await(long timeout, TimeUnit unit) throws InterruptedException {
-
+    public void await() throws InterruptedException {
+        for (Thread t : processorThreads) {
+            t.join();
+        }
+        status = Status.SHUT_DOWN;
     }
 
     @Override

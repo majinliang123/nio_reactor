@@ -1,7 +1,5 @@
 package org.messtin.nio.reactor.core.worker;
 
-import org.messtin.nio.reactor.core.Status;
-
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -11,17 +9,23 @@ import java.util.concurrent.TimeUnit;
  */
 public interface LifeCycle {
 
-    void initialize() throws IOException;
-
-    void close();
+    enum Status {
+        INACTIVE, ACTIVE, SHUTTING_DOWN, SHUT_DOWN;
+    }
 
     /**
-     * When we try to close a object, it may be need some time.
-     * So we use {@link #await()} to block the thread until the object is closed.
+     * When run {@link #initialize()}, the status will change as:
+     * {@link Status#INACTIVE} --> {@link Status#ACTIVE}
+     *
+     * @throws IOException
      */
-    void await() throws InterruptedException;
+    void initialize() throws IOException;
 
-    void await(final long timeout, final TimeUnit unit) throws InterruptedException;
+    /**
+     * When run {@link #close()}, the status will change as:
+     * {@link Status#ACTIVE} --> {@link Status#SHUTTING_DOWN}
+     */
+    void close();
 
     Status getStatus();
 }
