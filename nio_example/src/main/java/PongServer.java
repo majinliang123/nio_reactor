@@ -10,12 +10,13 @@ import java.nio.charset.StandardCharsets;
 
 public class PongServer {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         ServerPromise server = ServerBuilder.build(PongEventListener::new).bind(8080);
         server.start();
         System.out.println("Will close the server if you enter any word.");
         System.in.read();
         server.close();
+        server.await();
     }
 
     public static class PongEventListener implements EventHandler {
