@@ -59,7 +59,6 @@ public class DefaultDispatcher implements Dispatcher {
     public void close() {
         status = Status.SHUTTING_DOWN;
         processors.forEach(Processor::close);
-        processorThreads.forEach(Thread::interrupt);
     }
 
     @Override

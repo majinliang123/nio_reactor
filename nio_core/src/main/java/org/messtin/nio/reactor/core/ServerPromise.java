@@ -39,13 +39,13 @@ public class ServerPromise implements AsyncLifeCycle {
     public void close() {
         logger.info("Start close the server.");
         acceptor.close();
-        acceptorThread.interrupt();
     }
 
     @Override
     public void await() throws InterruptedException {
+        acceptor.await();
         acceptorThread.join();
-        logger.info("Server is closed.");
+        logger.info("Server is closed. Bye..");
     }
 
     public Status getStatus() {

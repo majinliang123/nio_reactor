@@ -2,8 +2,8 @@ package org.messtin.nio.reactor.core.worker.impl;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.messtin.nio.reactor.core.session.SessionContext;
 import org.messtin.nio.reactor.core.handler.EventHandler;
+import org.messtin.nio.reactor.core.session.SessionContext;
 import org.messtin.nio.reactor.core.util.Preconditions;
 import org.messtin.nio.reactor.core.worker.Processor;
 
@@ -41,7 +41,7 @@ public class DefaultProcessor extends Thread implements Processor {
             while (status == Status.ACTIVE || !sessions.isEmpty()) {
                 int readyCount = selector.select();
                 logger.info("Selected {} selection keys from selector.", readyCount);
-
+                
                 if (status == Status.SHUTTING_DOWN) {
                     closeChannelQueue();
                     closeSessions();
@@ -74,6 +74,7 @@ public class DefaultProcessor extends Thread implements Processor {
         for (SessionContext session : sessions) {
             session.close();
         }
+        sessions.clear();
     }
 
     private void processEvents(Set<SelectionKey> keys) {
@@ -144,6 +145,7 @@ public class DefaultProcessor extends Thread implements Processor {
     @Override
     public void close() {
         status = Status.SHUTTING_DOWN;
+        selector.wakeup();
     }
 
     @Override
