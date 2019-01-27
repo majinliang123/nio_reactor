@@ -1,7 +1,7 @@
 # NIO Reactor
 
 ### About
-- A Nio server, use multi reactor module like netty.
+- A Nio server, use multi reactor pattern like netty.
 - Could process 10,000 request in 9 seconds.
 
 ### Design
