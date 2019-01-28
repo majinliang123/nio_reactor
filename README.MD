@@ -2,7 +2,7 @@
 
 ### About
 - A Nio server, use multi reactor pattern like netty.
-- Could process 10,000 request in 9 seconds.
+- Could process 100,000 request in 9 seconds.
 
 ### Design
 - There is a acceptor to listen connection from client
